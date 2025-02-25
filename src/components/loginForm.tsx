@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useForm } from "react-hook-form";
+import { useForm,Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useLogin from "../hooks/useLogin";
@@ -35,8 +35,11 @@ const style={
 const LoginForm = ({open,handleClose}:Props) => {
 
   const{mutate,isPending}=useLogin('organization');
-    const { register, handleSubmit,reset, formState: { errors } } = useForm({
-        resolver: zodResolver(loginSchema),
+    const { register, handleSubmit,reset, formState: { errors },control } = useForm({
+        resolver: zodResolver(loginSchema),defaultValues:{
+          email:"",
+          password:''
+        }
       });
 
   const [showPassword,setShowPassword]=useState(false);
@@ -67,31 +70,42 @@ const LoginForm = ({open,handleClose}:Props) => {
       }
      }}
     >
-      <Fade in={open}>
+    <Fade in={open}>
     <Box sx={{...style}}>
       <IconButton sx={{position:'absolute', top:2, right:2}} onClick={handleClose}>
         <ClearIcon></ClearIcon>
       </IconButton>
     <Typography>Login</Typography>
     <form onSubmit={handleSubmit(onSubmit)}>
-     <TextField  margin="dense" fullWidth label="email" size='small' required   {...register("email")}
-              error={!!errors.email}
-              helperText={errors.email ? errors.email.message : ""}/>
-     <TextField  margin="dense" fullWidth type={showPassword?'text':'password'} label="password" size='small' required 
-      {...register("password")}
-      error={!!errors.password}
-      helperText={errors.password ? errors.password.message : ""}
-     slotProps={{
-      input:{
-        endAdornment:(
-          <InputAdornment position="end">
-            <IconButton onClick={handleShowPassword}>
-              {showPassword?<VisibilityOff/>:<Visibility/>}
-            </IconButton>
-          </InputAdornment>
-        )
-    }
-     }}/>
+
+    <Controller name="email" control={control} render={({field:{onBlur,onChange,value}})=>(
+       <TextField  margin="dense" fullWidth label="email" size='small' onChange={onChange} onBlur={onBlur} value={value}
+       error={!!errors.email}
+       helperText={errors.email ? errors.email.message : ""}/>
+    )} rules={{required:true}} />
+
+    <Controller name="password" control={control} render={({field:{onChange,onBlur,value}})=>(
+        <TextField  margin="dense" fullWidth type={showPassword?'text':'password'} label="password" size='small'
+        onChange={onChange}
+        onBlur={onBlur}
+        value={value}
+        error={!!errors.password}
+        helperText={errors.password ? errors.password.message : ""}
+       slotProps={{
+        input:{
+          endAdornment:(
+            <InputAdornment position="end">
+              <IconButton onClick={handleShowPassword}>
+                {showPassword?<VisibilityOff/>:<Visibility/>}
+              </IconButton>
+            </InputAdornment>
+          )
+      }
+       }}/>
+     
+    )}  rules={{required:true}}/>
+    
+   
      <Button type="submit" sx={{color:"white", backgroundColor:'secondary.main' ,mt:1 }} disabled={isPending} >{isPending?"Logging in ..":"Login"}</Button>
      </form>
     </Box>

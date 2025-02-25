@@ -26,11 +26,11 @@ const useLogin=(user:'volunteer'|'organization')=>{
             localStorage.setItem('token',data.data.token);
 
             toast.success(data.message)
-            console.log("login successful",data)
+        
         },
         onError:(error:any)=>{
             toast.error(error.response?.data.message);
-            console.error("login error",error)
+         
         }
     })
 }

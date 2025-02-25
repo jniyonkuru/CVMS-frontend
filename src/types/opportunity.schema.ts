@@ -4,7 +4,7 @@ const OpportunityStatusTypeSchema = z.enum(['open', 'closed', 'ongoing'], {
     errorMap: () => ({ message: 'Status must be one of: open, closed, ongoing' }),
 });
 
-const locationSchema = z.object({
+ export const locationSchema = z.object({
     city: z.string().min(1,{message:"City is required"}),
     country: z.string().min(1,{message:"message is required"}),
   });

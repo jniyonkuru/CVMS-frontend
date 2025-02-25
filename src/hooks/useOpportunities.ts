@@ -5,7 +5,6 @@ import { Opportunity } from '../types/opportunity.schema';
 
 const fetchOpportunities = async ():Promise<Opportunity[]> => {
   const response = await api.get('/api/opportunities');
-  console.log(response.data)
   return response.data.data;
 };
 
