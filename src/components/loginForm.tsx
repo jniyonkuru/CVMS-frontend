@@ -16,6 +16,7 @@ const loginSchema = z.object({
 interface Props{
   open:boolean,
   handleClose:(e:React.SyntheticEvent)=>void,
+  user:"volunteer"|"organization"
 }
 
 const style={
@@ -32,10 +33,10 @@ const style={
 
 }
 
-const LoginForm = ({open,handleClose}:Props) => {
+const LoginForm = ({open,handleClose,user}:Props) => {
 
-  const{mutate,isPending}=useLogin('organization');
-    const { register, handleSubmit,reset, formState: { errors },control } = useForm({
+  const{mutate,isPending}=useLogin(user);
+    const { handleSubmit,reset, formState: { errors },control } = useForm({
         resolver: zodResolver(loginSchema),defaultValues:{
           email:"",
           password:''
