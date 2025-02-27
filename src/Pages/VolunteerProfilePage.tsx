@@ -1,17 +1,18 @@
 import { Box, Typography } from "@mui/material";
 import ProfileUpdateForm from "../components/VolunteerProfileUpdateFrom";
 import NavBar from "../components/NavBar";
+import PagerWrapper from "../components/PagerWrapper";
 
 import React from "react";
 
 function VolunteerProfilePage() {
   return (
-    <Box>
-      <NavBar />
-      <Box sx={{ mt: 6 }}>
+  <>
+    <NavBar />
+    <PagerWrapper>
         <ProfileUpdateForm />
-      </Box>
-    </Box>
+    </PagerWrapper>
+    </>
   );
 }
 

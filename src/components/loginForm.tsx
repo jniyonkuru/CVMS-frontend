@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton } from "@mui/material";
+import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, CircularProgress } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm,Controller } from "react-hook-form";
@@ -107,7 +107,7 @@ const LoginForm = ({open,handleClose,user}:Props) => {
     )}  rules={{required:true}}/>
     
    
-     <Button type="submit" sx={{color:"white", backgroundColor:'secondary.main' ,mt:1 }} disabled={isPending} >{isPending?"Logging in ..":"Login"}</Button>
+     <Button type="submit" sx={{ mt:1 }} variant="outlined" disabled={isPending} >{isPending ? <CircularProgress size={20} sx={{color:"primary.main"}} /> : "Login"}</Button>
      </form>
     </Box>
     </Fade>

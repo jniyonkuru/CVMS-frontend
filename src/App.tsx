@@ -19,9 +19,13 @@ import VolunteerEventsPage from "./Pages/VolunteerEventsPage";
 import VolunteerProfilePage from "./Pages/VolunteerProfilePage";
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
+
 function App() {
+  
+
+
   return (<>
-    <ToastContainer position="top-right" autoClose={3000} />
+    <ToastContainer position="top-right" autoClose={2000} />
     <BrowserRouter>
      <Routes>
       <Route path="/volunteer/dashboard" element={<VolunteerDashBoard/>}/>
