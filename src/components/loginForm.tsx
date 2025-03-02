@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, CircularProgress } from "@mui/material";
+import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm,Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useLogin from "../hooks/useLogin";
+import { useAuth } from "../AuthContext";
 
 
 const loginSchema = z.object({
     email: z.string().email("Please enter a valid email").min(1, "Email is required"),
-    password: z.string().min(8, "Password must be at least 6 characters")
+    password: z.string().min(8, "Password must be at least 6 characters"),
+    role:z.string().min(1,{message:"role is required"}),
   });
 
 interface Props{
   open:boolean,
   handleClose:(e:React.SyntheticEvent)=>void,
-  user:"volunteer"|"organization"
 }
 
 const style={
@@ -33,13 +33,14 @@ const style={
 
 }
 
-const LoginForm = ({open,handleClose,user}:Props) => {
+const LoginForm = ({open,handleClose}:Props) => {
 
-  const{mutate,isPending}=useLogin(user);
+  const{login,isPending}=useAuth()
     const { handleSubmit,reset, formState: { errors },control } = useForm({
         resolver: zodResolver(loginSchema),defaultValues:{
           email:"",
-          password:''
+          password:'',
+          role:'volunteer'
         }
       });
 
@@ -49,8 +50,8 @@ const LoginForm = ({open,handleClose,user}:Props) => {
        setShowPassword((prev)=>!prev)
   }
 
-  const onSubmit =(data: { email: string; password: string }) => {
-     mutate(data);
+  const onSubmit = async (data: { email: string; password: string }) => {
+    login(data)
      reset();
   };
 
@@ -103,6 +104,24 @@ const LoginForm = ({open,handleClose,user}:Props) => {
           )
       }
        }}/>
+     
+    )}  rules={{required:true}}/>
+
+<Controller name="role" control={control} render={({field:{onChange,value}})=>(
+         <FormControl fullWidth>
+         <Select
+           labelId="demo-simple-select-label"
+           id="demo-simple-select"
+           value={value}
+           onChange={onChange}
+           size="small"
+           sx={{mt:1}}
+         >
+           <MenuItem value={"volunteer"}>Volunteer</MenuItem>
+           <MenuItem value={"organization"}>Organization</MenuItem>
+         </Select>
+         <FormHelperText>Select role from the dropdown</FormHelperText>
+       </FormControl>
      
     )}  rules={{required:true}}/>
     

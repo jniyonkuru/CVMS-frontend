@@ -44,7 +44,7 @@ createRoot(document.getElementById('root')!).render(
         }}
       />
     <App />
-    <ReactQueryDevtools initialIsOpen={false}/>
+    <ReactQueryDevtools initialIsOpen={true}/>
     </QueryClientProvider>
   </StrictMode>
   </ThemeProvider>
