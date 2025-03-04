@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation,useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -32,18 +32,16 @@ const NavBar: React.FC = () => {
   const {
     user,
     isAuthenticated,
-    openLoginModal,
-    showLoginModal,
-    closeLoginModal,
     logout,
   } = useAuth();
 
+ const navigate=useNavigate()
 
-
-  const handleLoginOpen = () => {
-    openLoginModal()
-    handleMenuClose();
-  };
+  const handleLogOut=()=>{
+    logout();
+   handleMenuClose();
+   navigate("/", { replace: true });
+  }
 
   const { palette } = useTheme();
 
@@ -63,11 +61,11 @@ const NavBar: React.FC = () => {
     {
       text: "Dashboard",
       icon: <DashboardIcon sx={{ fontSize: 20 }} />,
-      to: "/volunteer/dashboard",
+      to: "/dashboard",
     },
-    { text: "Profile", icon: <AccountCircleIcon />, to: "/volunteer/profile" },
+    { text: "Profile", icon: <AccountCircleIcon />, to: "/profile" },
     { text: "Tasks", icon: <BallotIcon />, to: "/" },
-    { text: "Events", icon: <EventNoteIcon />, to: "/volunteer/events" },
+    { text: "Events", icon: <EventNoteIcon />, to: "/events" },
   ];
 
   const drawerContent = (
@@ -142,13 +140,10 @@ const NavBar: React.FC = () => {
           >
             <MenuIcon sx={{ fontSize: "35px", color: "#fafafa" }} />
           </IconButton>
-          <LoginForm
-            open={showLoginModal}
-            handleClose={closeLoginModal}
-          />
+        
           {user && (
             <Typography variant="h6" sx={{ flexGrow: 1, color: "#fafafa" }}>
-              {`${user.role} Dashboard`}
+             {` Welcome ,${user.role=="volunteer"?user.firstName:user.name}`}
             </Typography>
           )}
           <Typography sx={{ color: "#fafafa" }}>{user?`${user.email}`:'Account'}</Typography>
@@ -168,10 +163,12 @@ const NavBar: React.FC = () => {
             sx={{ mt: 1 }}
           >
             {!isAuthenticated && (
-              <MenuItem onClick={handleLoginOpen}>Login</MenuItem>
+              <MenuItem key='login' >
+                <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>Login</Link>
+              </MenuItem>
             )}
             {isAuthenticated && (
-              <MenuItem onClick={logout}>Logout</MenuItem>
+              <MenuItem key='logout' onClick={handleLogOut}>Logout</MenuItem>
             )}
           </Menu>
         </Toolbar>

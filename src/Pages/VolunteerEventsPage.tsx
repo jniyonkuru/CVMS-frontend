@@ -10,7 +10,7 @@ function VolunteerEventsPage() {
     <>
   <NavBar/>
     <PagerWrapper>
-        <Calendar />
+        <Calendar />/
     </PagerWrapper>
     </>
   );

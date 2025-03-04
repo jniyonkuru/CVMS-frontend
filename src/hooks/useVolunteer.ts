@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import {volunteer}  from "../types/volunteer.schema"
@@ -15,6 +15,18 @@ const registerVolunteer= async(volunteerData:volunteer):Promise<any>=>{
     },2000)
   })
 
+}
+
+const queryVolunteers=async()=>{
+    const response= await api.get("/api/volunteers");
+    return response.data.data;
+} 
+
+ export const useVolunteersQuery=()=>{
+    return useQuery({
+    queryKey:["users"],
+    queryFn:queryVolunteers
+    })
 }
 
 const useRegisterVolunteer=()=>{

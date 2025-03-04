@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -6,6 +6,7 @@ import { useForm,Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 const loginSchema = z.object({
@@ -34,8 +35,9 @@ const style={
 }
 
 const LoginForm = ({open,handleClose}:Props) => {
+  const navigate=useNavigate()
 
-  const{login,isPending}=useAuth()
+  const{login,isPending,isAuthenticated}=useAuth()
     const { handleSubmit,reset, formState: { errors },control } = useForm({
         resolver: zodResolver(loginSchema),defaultValues:{
           email:"",
@@ -46,6 +48,13 @@ const LoginForm = ({open,handleClose}:Props) => {
 
   const [showPassword,setShowPassword]=useState(false);
 
+  useEffect(()=>{
+   if(isAuthenticated){
+    navigate('/')
+   }
+
+
+  },[isAuthenticated,isPending,login])
  const  handleShowPassword=()=>{
        setShowPassword((prev)=>!prev)
   }

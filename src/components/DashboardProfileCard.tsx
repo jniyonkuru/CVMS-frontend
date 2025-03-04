@@ -1,12 +1,20 @@
 import React from "react";
-import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
-import { blue } from "@mui/material/colors";
+import { Card, CardContent, Typography, Avatar, Box, CircularProgress } from "@mui/material";
+import { useAuth } from "../AuthContext";
+import { volunteer } from "../types/volunteer.schema";
+import { organization } from "../types/organization.schema";
 
 const ProfileCard: React.FC = () => {
+  const {isPending,user}=useAuth();
+  if(isPending){
+    return(
+      <CircularProgress/>
+    )
+  }
   return (
     <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: 2 }}>
       <CardContent sx={{ textAlign: "center" }}>
-        {/* Avatar */}
+    
         <Avatar
           alt="User Avatar"
           sx={{
@@ -18,23 +26,17 @@ const ProfileCard: React.FC = () => {
           }}
         />
         
-        {/* Name */}
+        {user&&
         <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold" ,color:'primary.main' }}>
-          John Doe
-        </Typography>
+          {user.role=="organization"? user.name:`${user.firstName},${user.lastName}`}
+        </Typography>}
         
-        {/* Bio / Description */}
-        <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-          Passionate about volunteering and making a difference in the community. Let's create impact together!
-        </Typography>
-        
-        {/* Additional Info */}
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
           <Typography variant="body2" color="textSecondary" sx={{ mr: 2 }}>
-            120 Volunteers
+            {user.email}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            35 Events
+            {user.phoneNumber}
           </Typography>
         </Box>
       </CardContent>

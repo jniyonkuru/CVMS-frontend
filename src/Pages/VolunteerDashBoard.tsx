@@ -4,16 +4,14 @@ import DashboardCards from "../components/DashboardCard";
 import ReviewsList from "../components/ReviewList";
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import ApplicationList from "../components/ApplicationList";
 import PagerWrapper from "../components/PagerWrapper";
-
+import ApplicationList from "../components/ListOfVolunteerApplications";
 function VolunteerDashBoard() {
   return (
   <>
   <NavBar/>
     <PagerWrapper>
     <Box sx={{ mt: 6 }}>
-     
       <Grid container>
         <Grid size={6}>
           <ProfileCard />
@@ -27,9 +25,10 @@ function VolunteerDashBoard() {
           <ReviewsList />
         </Grid>
         <Grid size={6}>
-          <ApplicationList />
+        <ApplicationList/>
         </Grid>
       </Grid>
+      
     </Box>
     </PagerWrapper>
     </>

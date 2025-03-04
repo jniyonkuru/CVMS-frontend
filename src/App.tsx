@@ -19,25 +19,29 @@ import VolunteerProfilePage from "./Pages/VolunteerProfilePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthProvider from "./AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import HomePage from "./Pages/HomePage";
+import LoginPage from "./Pages/LoginPage";
 
 function App() {
   return (
     <>
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="top-right" autoClose={1000} />
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/login" element={<LoginPage/>}/>
             <Route
-              path="/volunteer/dashboard"
+              path="/dashboard"
               element={  <ProtectedRoute>
                 <VolunteerDashBoard />
               </ProtectedRoute>}
             />
             <Route
-              path="/volunteer/profile"
+              path="/profile"
               element={<ProtectedRoute><VolunteerProfilePage /></ProtectedRoute>}
             />
-            <Route path="/volunteer/events" element={<ProtectedRoute><VolunteerEventsPage/></ProtectedRoute>} />
+            <Route path="/events" element={<ProtectedRoute><VolunteerEventsPage/></ProtectedRoute>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

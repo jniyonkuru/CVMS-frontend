@@ -41,14 +41,17 @@ const AuthProvider =({children}:{children:ReactNode})=>{
             if(!token){
                 return null;
             };
+          
        const response = await api.get('/api/me',{
                 headers:{
                     Authorization:`Bearer ${token}`
                 }
             })
             return response.data
-        } ,
-        enabled:!!token
+        } 
+        ,
+        enabled:!!token,
+        
     })
 
     const loginMutation = useMutation({

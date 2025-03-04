@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, Checkbox, FormControlLabel } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
   open: boolean;
-  handleClose: (e: React.SyntheticEvent) => void;
+  handleClose: () => void;
 }
 
 const style = {
@@ -45,7 +45,14 @@ const OrganizationRegistrationForm = ({ open, handleClose }: Props) => {
     }
   });
 
-  const{mutate,isPending}=useRegisterOrganization()
+  const{mutate,isPending,isSuccess}=useRegisterOrganization();
+
+
+  useEffect(()=>{
+    if(isSuccess){
+      handleClose()
+    }
+  },[isSuccess])
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -54,7 +61,6 @@ const OrganizationRegistrationForm = ({ open, handleClose }: Props) => {
   };
 
   const onSubmit = (data: any) => {
-    console.log("Form data:", data);
      mutate(data)
     reset(); 
   };
