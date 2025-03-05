@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactHTMLElement, useEffect, useState } from 'react';
 import { Box, Typography, Card, CardContent, CircularProgress } from '@mui/material';
 import Grid from "@mui/material/Grid2";
 import OpportunitiesList from './opportunitiesList';
 import Calendar from './Calendar';
 import OrganizationList from './ListOfOrganization';
 import VolunteerList from './ListOfVolunteers';
+
 import { useOpportunities } from '../hooks/useOpportunities';
+
+import { toast } from 'react-toastify';
 OpportunitiesList
 interface Feature {
   title: string;
@@ -17,6 +20,8 @@ const KeyFeatures: React.FC = () => {
 
  const {data:opportunities,isLoading,isSuccess}=useOpportunities();
  const [mappedOpportunities, setMappedOpportunities] = useState<any[]>([]);
+
+
   const features: Feature[] = [
 
     { title: 'Event Calendar', description: 'Stay updated on upcoming community events.',data:isLoading?<CircularProgress/>:<Calendar events={isSuccess?mappedOpportunities:[]}/> },
@@ -39,11 +44,15 @@ const KeyFeatures: React.FC = () => {
           }));
           setMappedOpportunities(mapped);
     }
-  },[opportunities])
+  },[opportunities]);
+
+
+
 
   return (
 
     <Box sx={{ my: 4 }}>
+     
       <Typography variant="h4" align="center" sx={{color:"primary.main"}} gutterBottom>
         Key Features
       </Typography>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation,useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation,useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -18,13 +18,29 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import BallotIcon from "@mui/icons-material/Ballot";
 
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LoginForm from "./loginForm";
 import { useAuth } from "../AuthContext";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { transform } from "framer-motion";
+
+ export const GoBack=()=>{
+ const navigate=useNavigate()
+
+  return (
+    <Box sx={{position:"absolute", width:"fit-content",bottom:2}}>
+    <IconButton  onClick={()=>navigate(-1)}>
+      <KeyboardBackspaceIcon sx={{color:"primary.main" ,fontSize:"30px","&:hover":{transform:"scale(1.1)"},transition:"transform 0.2s ease-in-out"}}/>
+    </IconButton>
+    </Box>
+  )
+}
+
+
 const NavBar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -66,26 +82,18 @@ const NavBar: React.FC = () => {
     { text: "Profile", icon: <AccountCircleIcon />, to: "/profile" },
     { text: "Tasks", icon: <BallotIcon />, to: "/" },
     { text: "Events", icon: <EventNoteIcon />, to: "/events" },
+    { text: "Messages", icon: <MailOutlineIcon />, to: "#" },
+    
+
   ];
 
   const drawerContent = (
     <Box
-      sx={{ width: 200, pt: 8 }}
+      sx={{ width: 200}}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <Typography
-        variant="body2"
-        sx={{
-          textAlign: "center",
-          color: "primary.light",
-          fontSize: "12px",
-          mb: 3,
-        }}
-      >
-        Community volunteering Management System
-      </Typography>
 
       <List component="nav">
         {drawerItems.map((item) => {
@@ -130,7 +138,7 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      <AppBar>
+      <AppBar position="static">
         <Toolbar>
           <IconButton
             aria-label="menu"

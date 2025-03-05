@@ -13,7 +13,8 @@ import "./App.css";
 // import DashboardCards from "./components/DashboardCard"
 // import ProfileCard from "./components/DashboardProfileCard";
 // import ProfileUpdateForm  from "./components/VolunteerProfileUpdateFrom"
-import VolunteerDashBoard from "./Pages/VolunteerDashBoard";
+import OrganizationDashBoard from "./Pages/OrganizaitonDashBoard";
+import VolunteerDashboard from "./Pages/VolunteerDashboard";
 import VolunteerEventsPage from "./Pages/VolunteerEventsPage";
 import VolunteerProfilePage from "./Pages/VolunteerProfilePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -34,7 +35,7 @@ function App() {
             <Route
               path="/dashboard"
               element={  <ProtectedRoute>
-                <VolunteerDashBoard />
+                <VolunteerDashboard />
               </ProtectedRoute>}
             />
             <Route

@@ -16,7 +16,8 @@ interface AuthContextType{
     showLoginModal: boolean;
     openLoginModal: () => void;
     closeLoginModal: () => void;
-    isPending:boolean
+    isPending:boolean;
+    isLoading:boolean;
 }
 
 const AuthContext= createContext<AuthContextType|undefined>(undefined);
@@ -35,7 +36,7 @@ const AuthProvider =({children}:{children:ReactNode})=>{
     //  }
     // },[token])
 
-    const {data:user}=useQuery({
+    const {data:user,isLoading}=useQuery({
         queryKey:["user",token],
         queryFn:async()=>{
             if(!token){
@@ -74,9 +75,9 @@ const AuthProvider =({children}:{children:ReactNode})=>{
           closeLoginModal()
           queryClient.invalidateQueries({ queryKey: ["user"] as const });
         },
-        onError: (error) => {
+        onError: (error:any) => {
           console.error("Login failed:", error);
-          toast.error("Login failed. Please try again.");
+          toast.error(error.response?.data?.message||"Login failed. Please try again.");
         },
       });
       
@@ -96,7 +97,7 @@ const AuthProvider =({children}:{children:ReactNode})=>{
    const closeLoginModal=()=>setShowLoginModal(false)
  
 return (
-    <AuthContext.Provider value={{user,login,logout,isAuthenticated:!!user,openLoginModal,closeLoginModal,showLoginModal,isPending:loginMutation.isPending}}>
+    <AuthContext.Provider value={{user,login,logout,isAuthenticated:!!user,openLoginModal,closeLoginModal,showLoginModal,isPending:loginMutation.isPending,isLoading}}>
         {children}
     </AuthContext.Provider>
 )

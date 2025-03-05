@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import {volunteer}  from "../types/volunteer.schema"
@@ -30,9 +30,11 @@ const queryVolunteers=async()=>{
 }
 
 const useRegisterVolunteer=()=>{
+    const queryClient=useQueryClient();
      return useMutation({
         mutationFn:registerVolunteer,
         onSuccess:(data)=>{
+            queryClient.invalidateQueries({queryKey:["users"] as const})
             toast.success(data.message)
         },
         onError:(error:AxiosError<{ message?: string }>)=>{

@@ -7,7 +7,7 @@ import { useAuth } from '../AuthContext';
 
 const Header: React.FC = () => {
     const [isOpen,setOpen]=useState(false);
-    const {isAuthenticated,logout}=useAuth()
+    const {isAuthenticated,logout,isLoading}=useAuth()
 
     useEffect(()=>{
       if(isAuthenticated){
@@ -23,14 +23,14 @@ const Header: React.FC = () => {
         <LoginForm open={isOpen} handleClose={handleClose}/>
         <Box sx={{display:"flex", justifyContent:"space-between",alignItems:"center",width:"100%"}}>
        <CVMSLogo sx={{ fontSize: 50, mr: 2 }} />
-       <Box sx={{flex:1,}}>
+    {!isLoading&&<Box sx={{flex:1,}}>
         <Button sx={{color:"#fafafa"}} component={Link} to="/">Home</Button>
         <Button sx={{color:"#fafafa"}} component={Link} to="/about">About</Button>
         <Button sx={{color:"#fafafa"}} component={Link} to="/opportunities">Opportunities</Button>
         {isAuthenticated&&<Button sx={{color:"#fafafa"}} component={Link} to="/dashboard">Dashboard</Button>}
         <Button sx={{color:"#fafafa"}} component={Link} to="/contact">Contact</Button>
        {isAuthenticated?<Button sx={{color:"#fafafa"}} onClick={logout}>Logout</Button> :<Button sx={{color:"#fafafa"}} onClick={()=>setOpen(true)}>Login</Button>}
-        </Box>
+        </Box>}
         </Box>
       </Toolbar>
     </AppBar>

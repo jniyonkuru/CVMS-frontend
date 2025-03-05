@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, MenuItem, Select, InputLabel, FormControl, Checkbox, FormControlLabel } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, MenuItem, Select, InputLabel, FormControl, Checkbox, FormControlLabel, CircularProgress } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm,Controller } from "react-hook-form";
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useRegisterVolunteer from "../hooks/useVolunteer";
 interface Props {
   open: boolean;
-  handleClose: (e: React.SyntheticEvent) => void;
+  handleClose: () => void;
 }
 
 const style = {
@@ -44,7 +44,7 @@ const VolunteerRegistrationForm = ({ open, handleClose }: Props) => {
     }
   });
 
-  const{mutate,isPending}=useRegisterVolunteer()
+  const{mutate,isPending,isSuccess}=useRegisterVolunteer()
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -53,10 +53,15 @@ const VolunteerRegistrationForm = ({ open, handleClose }: Props) => {
   };
 
   const onSubmit = (data: any) => {
-    console.log("Form data:", data);
      mutate(data)
-    reset(); 
+   
   };
+  useEffect(()=>{
+ if(isSuccess){
+ reset(); 
+ handleClose();
+ }
+  },[isPending,isSuccess,mutate])
 
   return (
     <Modal
@@ -285,8 +290,8 @@ const VolunteerRegistrationForm = ({ open, handleClose }: Props) => {
 }
            
             
-            <Button  fullWidth type="submit" sx={{ color: "white", backgroundColor: 'primary.main', mt: 1 }} disabled={isPending}>
-              {isPending?"Registering...":"Register"}
+            <Button  variant="outlined" type="submit" sx={{ mt: 1,display:'block' }} disabled={isPending}>
+              {isPending?<CircularProgress  size={10} sx={{color:"primary.main"}}/>:"Register"}
             </Button>
           </form>
         </Box>

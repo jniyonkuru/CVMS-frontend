@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Modal, Backdrop, Fade, TextField, Button, Typography, InputAdornment, IconButton, Checkbox, FormControlLabel, CircularProgress } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm,Controller } from "react-hook-form";
@@ -64,7 +64,12 @@ const OrganizationRegistrationForm = ({ open, handleClose }: Props) => {
      mutate(data)
     reset(); 
   };
-
+ useEffect(()=>{
+  if(isSuccess){
+    reset();
+    handleClose();
+  }
+ },[isSuccess,isPending,mutate])
   return (
     <Modal
       open={open}
@@ -269,8 +274,8 @@ const OrganizationRegistrationForm = ({ open, handleClose }: Props) => {
   ))
 }
             
-            <Button  fullWidth type="submit" sx={{ color: "white", backgroundColor: 'primary.main', mt: 1 }} disabled={isPending}>
-              {isPending?"Registering...":"Register"}
+            <Button variant="outlined"  type="submit" sx={{ mt: 1, display:"block" }} disabled={isPending}>
+              {isPending?<CircularProgress size={10} sx={{color:"primary.main",}}/>:"Register"}
             </Button>
           </form>
         </Box>

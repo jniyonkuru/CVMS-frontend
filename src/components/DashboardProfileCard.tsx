@@ -4,9 +4,10 @@ import { useAuth } from "../AuthContext";
 import { volunteer } from "../types/volunteer.schema";
 import { organization } from "../types/organization.schema";
 
+
 const ProfileCard: React.FC = () => {
-  const {isPending,user}=useAuth();
-  if(isPending){
+  const {user,isLoading}=useAuth();
+  if(isLoading){
     return(
       <CircularProgress/>
     )
