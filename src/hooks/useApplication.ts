@@ -5,9 +5,37 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 
 
-const  fetchApplications=async(userId:string):Promise<any[]>=>{
 
-    
+const fetchApplicationsPerOrganization = async (): Promise<any[]> => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      toast.error("No token found. Please log in.");
+      throw new Error("Authentication token missing"); // Ensure React Query handles the error
+    }
+  
+    const response = await api.get("/api/applications/byOrganization", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    return response.data.data || [];
+  };
+  
+  export const useApplicationsByOrg = () => {
+    const { user } = useAuth();
+  
+    return useQuery({
+      queryKey: ["applicationsPerOrg", user?._id], // Include user ID for refetching
+      queryFn: fetchApplicationsPerOrganization,
+      enabled: !!user, // Ensures the query only runs when user is available
+      staleTime: 1000 * 60 * 5, // Cache results for 5 minutes
+      retry: 1, // Reduce unnecessary retries on error
+    });
+  };
+
+const  fetchApplications=async(userId:string):Promise<any[]>=>{
 const response=await api.get('/api/applications',{
     params:{volunteerId:userId}
 })

@@ -8,7 +8,7 @@ import PagerWrapper from "../components/PagerWrapper";
 import ApplicationList from "../components/ListOfVolunteerApplications";
 import { ErrorBoundary } from "react-error-boundary";
 import CreateOpportunityForm from "../components/CreateOpportunityForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrganizationProfileCard from "../components/OrganizationProfileCard";
 import { useAuth } from "../AuthContext";
 import EventList from "../components/ListofOrganizationEvent";
@@ -16,8 +16,7 @@ import { EventItem } from "../components/ListofOrganizationEvent";
 import VolunteerApplicationsList from "../components/ListofApplicationOnOrganizationpage";
 import { VolunteerApplication } from "../components/ListofApplicationOnOrganizationpage";
 import WorkingVolunteerList from "../components/ListOfWorkingVolunteerFoOrganization";
-
-
+import { useApplicationsByOrg} from "../hooks/useApplication";
 
 const events:EventItem[] = [
   {
@@ -51,29 +50,7 @@ const events:EventItem[] = [
     status: "Completed"
   }
 ];
-const applications: VolunteerApplication[] = [
-  {
-    eventTitle: "Tech Conference 2023",
-    userName: "John Doe",
-    applicationDate: "2023-10-01T09:00:00Z",
-    status: "Pending",
-  },
-  {
-    eventTitle: "Product Launch",
-    userName: "Jane Smith",
-    applicationDate: "2023-09-25T14:00:00Z",
-    status: "Approved",
-  },
-  {
-    eventTitle: "Hackathon",
-    userName: "Alice Johnson",
-    applicationDate: "2023-09-20T10:00:00Z",
-    status: "Rejected",
-  },
-];
 
-// Usage
-<VolunteerApplicationsList applications={applications} />
 
 export const Fallback = ({
   error,
@@ -96,6 +73,32 @@ function OrganizationDashBoard() {
     setOpen(false);
   };
   const {user,isAuthenticated,isLoading}=useAuth();
+  const {data:applicationList,isLoading:applicationListLoading,error}=useApplicationsByOrg();
+  const [apps,setApps]=useState<any[]>([]);
+
+  useEffect(()=>{
+  if(!applicationListLoading &&!error){
+    const mapped= applicationList?.map((app:any)=>{
+      return{
+        eventTitle:app.opportunityId.title,
+        userName:app.volunteerId.firstName,
+        applicationDate:app.applicationDate,
+        status:app.status
+
+      }
+    })
+if(mapped?.length){
+ setApps(mapped)
+}
+   
+  }
+
+  },[applicationList])
+
+if(error){
+  return <h1>{JSON.stringify(error.message)}</h1>
+}
+
   return (
     <>
       <ErrorBoundary FallbackComponent={Fallback}>
@@ -131,7 +134,7 @@ function OrganizationDashBoard() {
               <EventList events={events}/>
             </Grid>
             <Grid size={4}>
-              <VolunteerApplicationsList applications={applications}/>
+              <VolunteerApplicationsList applications={apps}/>
             </Grid>
             <Grid size={5}>
               <WorkingVolunteerList/>
