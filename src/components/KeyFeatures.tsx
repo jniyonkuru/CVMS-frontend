@@ -46,27 +46,15 @@ const KeyFeatures: React.FC = () => {
     }
   },[opportunities]);
 
-
-
-
   return (
 
     <Box sx={{ my: 4 }}>
      
-      <Typography variant="h4" align="center" sx={{color:"primary.main"}} gutterBottom>
-        Key Features
-      </Typography>
       <Grid container spacing={1}>
         {features.map((feature, index) => (
           <Grid  key={index} size={index%2==0?8:4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" sx={{color:"primary.main"}}>
-                  {feature.title}
-                </Typography>
                 {feature.data}
-              </CardContent>
-            </Card>
+            
           </Grid>
         ))}
       </Grid>

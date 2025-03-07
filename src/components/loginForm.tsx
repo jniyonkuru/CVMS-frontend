@@ -86,7 +86,7 @@ const LoginForm = ({open,handleClose}:Props) => {
       <IconButton sx={{position:'absolute', top:2, right:2}} onClick={handleClose}>
         <ClearIcon></ClearIcon>
       </IconButton>
-    <Typography>Login</Typography>
+    <Typography variant="h6" sx={{fontWeight:"bold"}}>Login</Typography>
     <form onSubmit={handleSubmit(onSubmit)}>
 
     <Controller name="email" control={control} render={({field:{onBlur,onChange,value}})=>(

@@ -6,6 +6,8 @@ import LoginForm from './loginForm';
 import { useAuth } from '../AuthContext';
 
 const Header: React.FC = () => {
+
+  
     const [isOpen,setOpen]=useState(false);
     const {isAuthenticated,logout,isLoading}=useAuth()
 
@@ -18,17 +20,16 @@ const Header: React.FC = () => {
         setOpen(false)
     }
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{background:"linear-gradient(145deg, #1e4854, #c0d1d1)",borderRadius:"5px"}}>
       <Toolbar>
         <LoginForm open={isOpen} handleClose={handleClose}/>
         <Box sx={{display:"flex", justifyContent:"space-between",alignItems:"center",width:"100%"}}>
        <CVMSLogo sx={{ fontSize: 50, mr: 2 }} />
     {!isLoading&&<Box sx={{flex:1,}}>
-        <Button sx={{color:"#fafafa"}} component={Link} to="/">Home</Button>
-        <Button sx={{color:"#fafafa"}} component={Link} to="/about">About</Button>
-        <Button sx={{color:"#fafafa"}} component={Link} to="/opportunities">Opportunities</Button>
+        <Button sx={{color:"#fafafa"}} component={Link} to="#">Home</Button>
+        <Button sx={{color:"#fafafa"}} component={Link} to="#keyFeatures">Opportunities</Button>
         {isAuthenticated&&<Button sx={{color:"#fafafa"}} component={Link} to="/dashboard">Dashboard</Button>}
-        <Button sx={{color:"#fafafa"}} component={Link} to="/contact">Contact</Button>
+        <Button sx={{color:"#fafafa"}} component={Link} to="#testimonialSection">Contact</Button>
        {isAuthenticated?<Button sx={{color:"#fafafa"}} onClick={logout}>Logout</Button> :<Button sx={{color:"#fafafa"}} onClick={()=>setOpen(true)}>Login</Button>}
         </Box>}
         </Box>

@@ -26,15 +26,15 @@ const AuthProvider =({children}:{children:ReactNode})=>{
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
     const queryClient = useQueryClient();
-    // useEffect(()=>{
-    //  const token =localStorage.getItem('token');
-    //  if(token&&isTokenValid(token)){
-    //   setToken(token);
-    //   console.log(token)
-    //  }else{
-    //     localStorage.removeItem('token')
-    //  }
-    // },[token])
+    useEffect(()=>{
+     const token =localStorage.getItem('token');
+     if(token&&isTokenValid(token)){
+      setToken(token);
+      console.log(token)
+     }else{
+        localStorage.removeItem('token')
+     }
+    },[token])
 
     const {data:user,isLoading}=useQuery({
         queryKey:["user",token],

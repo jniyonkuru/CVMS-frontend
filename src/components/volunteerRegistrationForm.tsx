@@ -83,7 +83,7 @@ const VolunteerRegistrationForm = ({ open, handleClose }: Props) => {
           <IconButton sx={{ position: 'absolute', top: 2, right: 2 }} onClick={handleClose}>
             <ClearIcon />
           </IconButton>
-          <Typography variant="h6">Volunteer Registration</Typography>
+          <Typography variant="h6" sx={{fontWeight:"bold"}}>Volunteer Registration</Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{display:"flex", gap:2}}>
             <Controller

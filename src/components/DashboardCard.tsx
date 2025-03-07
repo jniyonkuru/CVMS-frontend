@@ -15,11 +15,11 @@ const stats = [
 
 const DashboardCards: React.FC = () => {
   return (
-    <Box sx={{ flexGrow: 1, p: 3 }}>
-      <Grid container spacing={3}>
+    <Box sx={{ flexGrow: 1, p:2 ,mr:-1}}>
+  <Grid container spacing={1} width="100%" sx={{mr:8}}>
         {stats.map((stat, index) => (
-          <Grid  key={index}>
-            <Card sx={{ textAlign: "center", p: 2, boxShadow: 3 }}>
+          <Grid  key={index} size={{md:6}}>
+            <Card sx={{ textAlign: "center", p: 2, boxShadow:3 , }} >
               <CardContent>
                 {stat.icon}
                 <Typography variant="h6" sx={{ mt: 1, fontWeight: "bold" }}>

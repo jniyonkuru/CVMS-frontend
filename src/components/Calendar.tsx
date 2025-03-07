@@ -35,7 +35,7 @@ export default function Calendar({ events }: Props) {
   return (
     <Box
       sx={{
-        maxWidth: "600px",
+        width:"auto",
         margin: "auto",
         mt: 4,
         boxShadow: 3,

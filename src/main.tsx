@@ -9,7 +9,7 @@ import './index.css'
 import App from './App.tsx'
 import { CssBaseline } from '@mui/material';
 const queryclient= new QueryClient()
-
+import AuthProvider from './AuthContext.tsx';
 createRoot(document.getElementById('root')!).render(
   <ThemeProvider theme={theme}>
   <StrictMode>
@@ -43,7 +43,9 @@ createRoot(document.getElementById('root')!).render(
           },
         }}
       />
-    <App />
+      <AuthProvider>
+      <App />
+      </AuthProvider>
     <ReactQueryDevtools initialIsOpen={true}/>
     </QueryClientProvider>
   </StrictMode>

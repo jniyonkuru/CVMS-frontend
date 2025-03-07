@@ -20,8 +20,11 @@ const ConfirmationDialog = ({ open, onClose, onConfirm, title, message }:Props) 
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">Cancel</Button>
-        <Button onClick={onConfirm} color="primary" variant="contained">Confirm</Button>
+        <Button onClick={onClose} color="secondary" variant="outlined">Cancel</Button>
+        <Button onClick={()=>{
+          onConfirm();
+          onClose();
+        }} color="primary" variant="outlined">Confirm</Button>
       </DialogActions>
     </Dialog>
   );

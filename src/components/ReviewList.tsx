@@ -4,61 +4,90 @@ import StarIcon from '@mui/icons-material/Star';
 
 interface Review {
   name: string;
-  rating: number;
+  responsiveness: number;
+  friendliness: number;
+  delivery: number;
   reviewText: string;
   avatarUrl: string;
 }
 
 const reviews: Review[] = [
   {
-    name: "John Doe",
-    rating: 4.5,
+    name: "World Vision",
+    responsiveness: 3,
+    friendliness: 3,
+    delivery: 4.5,
     reviewText: "This is a fantastic product! Highly recommend it to everyone.",
-    avatarUrl: "https://i.pravatar.cc/150?img=1",
+    avatarUrl: "",
   },
   {
-    name: "Jane Smith",
-    rating: 3,
+    name: "Partners in Health",
+    responsiveness: 3,
+    friendliness: 3,
+    delivery: 3,
     reviewText: "It's good, but there are some areas for improvement.",
-    avatarUrl: "https://i.pravatar.cc/150?img=2",
+    avatarUrl: "",
   },
   {
-    name: "Mary Johnson",
-    rating: 5,
+    name: "Handicap Internationale",
+    responsiveness: 3,
+    friendliness: 3,
+    delivery: 5,
     reviewText: "Absolutely loved it! Exceeded my expectations!",
-    avatarUrl: "https://i.pravatar.cc/150?img=3",
+    avatarUrl: "",
   },
 ];
 
 const ReviewsList: React.FC = () => {
   return (
-    <Paper sx={{ p: 2, width: '100%', maxWidth: 600, margin: 'auto' }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
+    <Paper sx={{ p: 2, width: '100%', maxWidth: 600, margin: 'auto', maxHeight: 400, overflow: "scroll", position: "relative", boxShadow: 3, borderRadius: 2 }}>
+      <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', position: "static", top: 0, height: 40, backgroundColor: "white", fontWeight: "bold", paddingLeft: 1 }}>
         Reviews
       </Typography>
       <List>
         {reviews.map((review, index) => (
           <Box key={index}>
-            <ListItem sx={{ display: 'flex', alignItems: 'flex-start' }}>
+            <ListItem sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
               <ListItemAvatar>
-                <Avatar alt={review.name} src={review.avatarUrl} />
+                <Avatar alt={review.name} src={review.avatarUrl} sx={{ width: 40, height: 40 }} />
               </ListItemAvatar>
-              <Box sx={{ flexGrow: 1 }}>
+              <Box sx={{ flexGrow: 1, paddingLeft: 2 }}>
                 <ListItemText
                   primary={
-                    <Typography variant="body1" fontWeight="bold">
+                    <Typography variant="body1" fontWeight="bold" color="text.primary">
                       {review.name}
                     </Typography>
                   }
                   secondary={
                     <Box>
-                      <Rating
-                        value={review.rating}
-                        readOnly
-                        precision={0.5}
-                        icon={<StarIcon sx={{ fontSize: 18 }} />}
-                      />
-                      <Typography variant="body2" sx={{ mt: 1 }}>
+                      <Box sx={{ display: "flex", justifyContent: 'flex-start', alignItems: "center", gap: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Delivery</Typography>
+                        <Rating
+                          value={review.delivery}
+                          readOnly
+                          precision={0.5}
+                          icon={<StarIcon sx={{ fontSize: 18 }} />}
+                        />
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: 'flex-start', alignItems: "center", gap: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Responsiveness</Typography>
+                        <Rating
+                          value={review.responsiveness}
+                          readOnly
+                          precision={0.5}
+                          icon={<StarIcon sx={{ fontSize: 18 }} />}
+                        />
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: 'flex-start', alignItems: "center", gap: 2 }}>
+                        <Typography variant="body2" color="text.secondary">Friendliness</Typography>
+                        <Rating
+                          value={review.friendliness}
+                          readOnly
+                          precision={0.5}
+                          icon={<StarIcon sx={{ fontSize: 18 }} />}
+                        />
+                      </Box>
+                      <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
                         {review.reviewText}
                       </Typography>
                     </Box>
@@ -66,7 +95,7 @@ const ReviewsList: React.FC = () => {
                 />
               </Box>
             </ListItem>
-            {index < reviews.length - 1 && <Divider />}
+            {index < reviews.length - 1 && <Divider sx={{ marginBottom: 1 }} />}
           </Box>
         ))}
       </List>

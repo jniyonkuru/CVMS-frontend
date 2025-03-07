@@ -32,7 +32,7 @@ import { transform } from "framer-motion";
  const navigate=useNavigate()
 
   return (
-    <Box sx={{position:"absolute", width:"fit-content",bottom:2}}>
+    <Box sx={{position:"sticky", width:"fit-content",bottom:2}}>
     <IconButton  onClick={()=>navigate(-1)}>
       <KeyboardBackspaceIcon sx={{color:"primary.main" ,fontSize:"30px","&:hover":{transform:"scale(1.1)"},transition:"transform 0.2s ease-in-out"}}/>
     </IconButton>
@@ -105,17 +105,17 @@ const NavBar: React.FC = () => {
               component={Link}
               to={item.to}
               sx={{
-                backgroundColor: isActive
-                  ? palette.primary.main
+                background: isActive
+                  ? "linear-gradient(145deg, #1e4854, #c0d1d1)"
                   : "transparent",
-                color: isActive ? "#fff" : palette.primary.light,
+                color: isActive ? "#fafafa" : palette.primary.light,
                 "&:hover": {
-                  backgroundColor: palette.primary.dark,
-                  color: "#fff",
+                  background:"linear-gradient(145deg, #1e4854, #c0d1d1)",
+                  color: "#fafafa",
                 },
               }}
             >
-              <ListItemIcon sx={{ color: isActive ? "#fff" : "primary.main" }}>
+              <ListItemIcon sx={{ color: isActive ? "#fafafa" : "primary.main" }}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText
@@ -138,7 +138,7 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{borderRadius:3}}>
         <Toolbar>
           <IconButton
             aria-label="menu"

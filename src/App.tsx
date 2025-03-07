@@ -1,18 +1,6 @@
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import NavBar from "./components/Dashboard";
-
-// import ApplicationList from "./components/ApplicationList";
-
-// import VolunteerRegistrationForm from "./components/volunteerRegistrationForm";
-// import OrganizationRegistrationForm from "./components/organizationRegistration";
-// import LoginForm from "./components/loginForm";
-// import Calendar from "./components/Calendar";
 import "./App.css";
-// import { useState } from 'react';
-// import DashboardCards from "./components/DashboardCard"
-// import ProfileCard from "./components/DashboardProfileCard";
-// import ProfileUpdateForm  from "./components/VolunteerProfileUpdateFrom"
 import OrganizationDashBoard from "./Pages/OrganizaitonDashBoard";
 import VolunteerDashboard from "./Pages/VolunteerDashboard";
 import VolunteerEventsPage from "./Pages/VolunteerEventsPage";
@@ -22,20 +10,25 @@ import AuthProvider from "./AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
+import { useAuth } from "./AuthContext";
+import ScrollToTop from "./components/ScrollTop";
 
 function App() {
+
+  const {user}=useAuth();
+
   return (
     <>
-      <ToastContainer position="top-right" autoClose={1000} />
-      <AuthProvider>
+      <ToastContainer position="top-right" autoClose={2000} />
         <BrowserRouter>
+        <ScrollToTop/>
           <Routes>
             <Route path="/" element={<HomePage/>}/>
             <Route path="/login" element={<LoginPage/>}/>
             <Route
               path="/dashboard"
               element={  <ProtectedRoute>
-                <VolunteerDashboard />
+               {user?.role==="organization"?<OrganizationDashBoard/>:<VolunteerDashboard/>}
               </ProtectedRoute>}
             />
             <Route
@@ -45,8 +38,9 @@ function App() {
             <Route path="/events" element={<ProtectedRoute><VolunteerEventsPage/></ProtectedRoute>} />
           </Routes>
         </BrowserRouter>
-      </AuthProvider>
+    
     </>
+  
   );
 }
 

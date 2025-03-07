@@ -32,7 +32,6 @@ const createApplication = async (opportunityId: string): Promise<any | null> => 
         { opportunityId },
         { headers: { Authorization: `Bearer ${token}` } } 
     );
-    console.log(response.data)
     return response.data;
 };
 
@@ -43,7 +42,7 @@ const useCreateApplication = () => {
         mutationFn: createApplication,
         onSuccess: (data) => {
             toast.success(data.message);
-            queryClient.invalidateQueries({ queryKey: ["applications"] });
+            queryClient.invalidateQueries({ queryKey: ["applications"] as const });
         },
         onError: (error: any) => {
             toast.error(error.response?.data?.message || error.message);
