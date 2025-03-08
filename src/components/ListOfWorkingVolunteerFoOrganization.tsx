@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-  Button, Modal, Box, Typography, Rating, TextField
+  Button, Modal, Box, Typography, Rating, TextField,
+  CircularProgress
 } from '@mui/material';
+import { useApplicationsByOrg } from '../hooks/useApplication';
+import dayjs from 'dayjs';
+import { useCreateRatings } from '../hooks/useFeebacks';
+import { toast } from 'react-toastify';
 
 const style = {
   position: 'absolute',
@@ -23,23 +28,59 @@ const volunteers = [
 
 export default function WorkingVolunteerList() {
   const [open, setOpen] = useState(false);
-  const [selectedVolunteer, setSelectedVolunteer] = useState(null);
+  const [selectedVolunteer, setSelectedVolunteer] = useState<string|null>(null);
+  const[activeVolunteers,setActiveVolunteers]=useState<any[]>([])
   const [rating, setRating] = useState({
     delivery: 1,
     friendliness: 1,
     responsiveness: 1,
     comments: ""
   });
+ const {data:applications,isError,isLoading}=useApplicationsByOrg();
+ const{mutate,isPending}=useCreateRatings();
 
-  const handleOpen = (volunteer: any) => {
+
+
+  const handleOpen = (volunteer:string) => {
     setSelectedVolunteer(volunteer);
     setOpen(true);
   };
 
+
+  const handleSubmit=()=>{
+    if(!rating.comments||!selectedVolunteer){
+      toast.warning("Comments can not be empty");
+      return;
+    }
+    mutate({volunteerId:selectedVolunteer,rating})
+    handleClose();
+  }
   const handleClose = () => {
+    setRating({
+      delivery: 1,
+      friendliness: 1,
+      responsiveness: 1,
+      comments: ""
+    })
     setOpen(false);
     setSelectedVolunteer(null);
+    
   };
+  useEffect(()=>{
+if(applications){
+  const volunteers=applications.filter(app=>app.status==='approved').map(app=>{
+    return{
+      id:app.volunteerId._id.toString(),
+      name:`${app.volunteerId.firstName} ${app.volunteerId.lastName}`,
+      startDate:app.applicationDate ,
+      event:app.opportunityId.title,
+
+    }
+  });
+  setActiveVolunteers(volunteers)
+}
+  },[applications])
+  
 
   return (
 
@@ -50,7 +91,8 @@ export default function WorkingVolunteerList() {
         backgroundColor: "#fff"
       }}>
         <Typography variant='h6' sx={{fontWeight:"bold",borderBottom:"1px solid #ddd",p:1}} gutterBottom>List Of Current Volunteers</Typography>
-    <TableContainer     >
+        {isLoading&&<CircularProgress/>}
+   {activeVolunteers.length>0? <TableContainer     >
       <Table aria-label="simple table">
         <TableHead sx={{backgroundColor:"primary.main"}}>
           <TableRow sx={{color:"#fafafa" ,borderRadius:3}}>
@@ -61,15 +103,15 @@ export default function WorkingVolunteerList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {volunteers.map((volunteer) => (
+          {activeVolunteers.map((volunteer) => (
         <TableRow key={volunteer.id} sx={{borderBottom: "1px solid #ddd"}}>
               <TableCell component="th" scope="row">
                 {volunteer.name}
               </TableCell>
-              <TableCell align="right">{volunteer.startDate}</TableCell>
+              <TableCell align="right">{dayjs(volunteer.applicationDate).format("MMM DD, YYYY")}</TableCell>
               <TableCell align="right">{volunteer.event}</TableCell>
               <TableCell align="right">
-                <Button variant="outlined" onClick={() => handleOpen(volunteer)}>
+                <Button variant="outlined" onClick={() => handleOpen(volunteer.id)}>
                   Rate
                 </Button>
               </TableCell>
@@ -122,12 +164,12 @@ export default function WorkingVolunteerList() {
             onChange={(event) => setRating((prev) => ({ ...prev, comments: event.target.value }))}
           />
 
-          <Button variant='outlined' onClick={handleClose} sx={{ mt: 2 }}>
+          <Button variant='outlined' onClick={handleSubmit} sx={{ mt: 2 }}>
             Submit Rating
           </Button>
         </Box>
       </Modal>
-    </TableContainer>
+    </TableContainer>:<Typography>No Active Volunteers on the List</Typography>}
     </Paper>
   );
 }

@@ -11,7 +11,7 @@ const fetchApplicationsPerOrganization = async (): Promise<any[]> => {
   
     if (!token) {
       toast.error("No token found. Please log in.");
-      throw new Error("Authentication token missing"); // Ensure React Query handles the error
+      throw new Error("Authentication token missing"); 
     }
   
     const response = await api.get("/api/applications/byOrganization", {
@@ -23,15 +23,16 @@ const fetchApplicationsPerOrganization = async (): Promise<any[]> => {
     return response.data.data || [];
   };
   
-  export const useApplicationsByOrg = () => {
+   const useApplicationsByOrg = () => {
     const { user } = useAuth();
   
     return useQuery({
-      queryKey: ["applicationsPerOrg", user?._id], // Include user ID for refetching
+  
+      queryKey: ["applicationsPerOrg"],
       queryFn: fetchApplicationsPerOrganization,
-      enabled: !!user, // Ensures the query only runs when user is available
-      staleTime: 1000 * 60 * 5, // Cache results for 5 minutes
-      retry: 1, // Reduce unnecessary retries on error
+      enabled: !!user,
+      staleTime: 1000 * 60 * 5,
+      retry: 1, 
     });
   };
 
@@ -77,8 +78,42 @@ const useCreateApplication = () => {
         }
     });
 };
+// update application
+
+const updateApplicationStatus=async({applicationId,updates}:{applicationId:string,updates:{status:"approved"|"rejected"}})=>{
+  const token=localStorage.getItem("token");
+  if(!token){
+    throw new Error("Authentication token missing")
+  }
+  const  response= await api.put(`/api/applications/${applicationId}`,updates,{
+  
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
+  })
+ return response.data
+
+}
+
+const useUpdateApplicationStatus=()=>{
+  const queryClient=useQueryClient();
+    return useMutation({
+       mutationFn:updateApplicationStatus,
+       onSuccess:(data)=>{
+        toast.success(data.message||" updates was successfully");
+         queryClient.invalidateQueries({queryKey:['applications'] ,exact:true});
+         queryClient.invalidateQueries({queryKey:['applicationsPerOrg'],exact:true})
+
+       },
+       onError: (error: any) => {
+        toast.error(error.response?.data?.message || error.message);
+    }
+    
+    })
+
+}
 
 
-export {useCreateApplication}
+export {useCreateApplication, useApplicationsByOrg,useUpdateApplicationStatus}
 
 export default  useApplications;

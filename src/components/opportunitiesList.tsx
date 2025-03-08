@@ -62,7 +62,7 @@ const OpportunitiesList = () => {
                 <TableCell>{new Date(opportunity.startDate).toLocaleDateString()}</TableCell>
                 <TableCell>{opportunity.duration}</TableCell>
                 <TableCell>{opportunity.skillsRequired.join(", ")}</TableCell>
-                <TableCell sx={{ color: opportunity.status === "open" ? "primary.light" : "inherit" }}>
+                <TableCell sx={{ color: opportunity.status === "open" ? "primary.light" : "#FF5722" }}>
                   {opportunity.status}
                 </TableCell>
                 <TableCell>
@@ -72,7 +72,7 @@ const OpportunitiesList = () => {
                       setSelectedOpportunityId(opportunity._id.toString());
                       setConfirmModalOpen(true);
                     }}
-                    sx={{ textTransform: "none", borderRadius: 1 }}
+                    sx={{ textTransform: "none", borderRadius: 1 }} disabled={opportunity.status==="closed"}
                   >
                     Apply
                   </Button>

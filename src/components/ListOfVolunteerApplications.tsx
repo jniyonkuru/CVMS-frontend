@@ -12,7 +12,7 @@ interface Application {
 
 const statusColors: Record<string, "warning" | "success" | "error"> = {
   pending: "warning",
-  accepted: "success",
+  approved: "success",
   rejected: "error",
 };
 
@@ -85,19 +85,12 @@ export default function ApplicationList() {
                     color={statusColors[app.status]}
                     sx={{ mr: 1, fontWeight: "bold", textTransform: "capitalize" }}
                   />
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{display:'block',textAlign:"right"}}>
                     Applied on: {new Date(app.applicationDate).toLocaleDateString()}
                   </Typography>
                 </>
               }
             />
-            <IconButton
-              size="small"
-              sx={{ ml: 2 }}
-              onClick={(event) => handleMenuOpen(event, app)}
-            >
-              <MoreVertIcon />
-            </IconButton>
           </ListItem>
         ))}
       </List>

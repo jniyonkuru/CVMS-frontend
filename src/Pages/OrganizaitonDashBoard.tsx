@@ -17,39 +17,9 @@ import VolunteerApplicationsList from "../components/ListofApplicationOnOrganiza
 import { VolunteerApplication } from "../components/ListofApplicationOnOrganizationpage";
 import WorkingVolunteerList from "../components/ListOfWorkingVolunteerFoOrganization";
 import { useApplicationsByOrg} from "../hooks/useApplication";
+import { useOpportunities } from "../hooks/useOpportunities";
 
-const events:EventItem[] = [
-  {
-    title: "Tech Conference 2023",
-    startDate: "2023-11-15T09:00:00Z",
-    endDate: "2023-11-17T18:00:00Z",
-    status: "Upcoming"
-  },
-  {
-    title: "Product Launch",
-    startDate: "2023-10-01T10:00:00Z",
-    endDate: "2023-10-01T12:00:00Z",
-    status: "Completed"
-  },
-  {
-    title: "Team Building Workshop",
-    startDate: "2023-10-20T08:00:00Z",
-    endDate: "2023-10-20T16:00:00Z",
-    status: "Ongoing"
-  },
-  {
-    title: "Annual General Meeting",
-    startDate: "2023-12-05T14:00:00Z",
-    endDate: "2023-12-05T17:00:00Z",
-    status: "Upcoming"
-  },
-  {
-    title: "Hackathon",
-    startDate: "2023-09-25T09:00:00Z",
-    endDate: "2023-09-27T21:00:00Z",
-    status: "Completed"
-  }
-];
+
 
 
 export const Fallback = ({
@@ -75,11 +45,13 @@ function OrganizationDashBoard() {
   const {user,isAuthenticated,isLoading}=useAuth();
   const {data:applicationList,isLoading:applicationListLoading,error}=useApplicationsByOrg();
   const [apps,setApps]=useState<any[]>([]);
+ 
 
   useEffect(()=>{
   if(!applicationListLoading &&!error){
     const mapped= applicationList?.map((app:any)=>{
       return{
+        id:app._id,
         eventTitle:app.opportunityId.title,
         userName:app.volunteerId.firstName,
         applicationDate:app.applicationDate,
@@ -96,7 +68,7 @@ if(mapped?.length){
   },[applicationList])
 
 if(error){
-  return <h1>{JSON.stringify(error.message)}</h1>
+  return <h1>Something wen wrong</h1>
 }
 
   return (
@@ -131,7 +103,7 @@ if(error){
           </Grid>
           <Grid container spacing={1}>
             <Grid size={3}>
-              <EventList events={events}/>
+              <EventList/>
             </Grid>
             <Grid size={4}>
               <VolunteerApplicationsList applications={apps}/>

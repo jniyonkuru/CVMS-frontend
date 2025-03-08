@@ -17,12 +17,13 @@ import {
 import { Event, Schedule, MoreVert } from "@mui/icons-material";
 import dayjs from "dayjs";
 
-// Interface for Volunteer Application
+import { useUpdateApplicationStatus } from "../hooks/useApplication";
 export interface VolunteerApplication {
+  id:string
   eventTitle: string;
   userName: string;
   applicationDate: string; // ISO date format
-  status: "Approved" | "Rejected" | "Pending";
+  status: "approved" | "rejected" | "pending";
 }
 
 // Interface for Props
@@ -34,11 +35,12 @@ const VolunteerApplicationsList: React.FC<VolunteerApplicationsListProps> = ({
   applications,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [selectedApplicationId, setSelectedApplicationId] = React.useState<number | null>(null);
+  const [selectedApplicationId, setSelectedApplicationId] = React.useState<string | null>(null);
+  const{mutate,isPending}=useUpdateApplicationStatus()
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, index: number) => {
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, id: string) => {
     setAnchorEl(event.currentTarget);
-    setSelectedApplicationId(index);
+    setSelectedApplicationId(id);
   };
 
   const handleMenuClose = () => {
@@ -48,14 +50,14 @@ const VolunteerApplicationsList: React.FC<VolunteerApplicationsListProps> = ({
 
   const handleApprove = () => {
     if (selectedApplicationId !== null) {
-      console.log("Approved application:", applications[selectedApplicationId]);
+       mutate({applicationId:selectedApplicationId,updates:{status:"approved"}})
       handleMenuClose();
     }
   };
 
   const handleReject = () => {
     if (selectedApplicationId !== null) {
-      console.log("Rejected application:", applications[selectedApplicationId]);
+      mutate({applicationId:selectedApplicationId,updates:{status:"rejected"}})
       handleMenuClose();
     }
   };
@@ -67,7 +69,7 @@ const VolunteerApplicationsList: React.FC<VolunteerApplicationsListProps> = ({
           Volunteer Applications
         </Typography>
         <Divider sx={{ mb: 2 }} />
-
+  {applications.length===0&&<Typography>No applications yet On this list</Typography>}
         <List>
           {applications.map((application, index) => (
             <ListItem
@@ -97,16 +99,16 @@ const VolunteerApplicationsList: React.FC<VolunteerApplicationsListProps> = ({
                 label={application.status}
                 sx={{
                   bgcolor:
-                    application.status === "Approved"
+                    application.status === "approved"
                       ? "#4CAF50"
-                      : application.status === "Rejected"
+                      : application.status === "rejected"
                       ? "#FF5722"
                       : "#2196F3",
                   color: "#fff",
                 }}
                 size="small"
               />
-              <IconButton onClick={(e) => handleMenuOpen(e, index)}>
+              <IconButton onClick={(e) => handleMenuOpen(e, application.id)}>
                 <MoreVert />
               </IconButton>
             </ListItem>

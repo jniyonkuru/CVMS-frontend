@@ -1,101 +1,119 @@
-import React from "react";
-import { Paper, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Box, Rating, Divider } from "@mui/material";
-import StarIcon from '@mui/icons-material/Star';
+import React, { useEffect, useState } from "react";
+import { Paper, List, ListItem, ListItemText, Box, Typography, Rating, Divider, CircularProgress } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import { useRatingsQuery } from "../hooks/useFeebacks";
+import dayjs from "dayjs";
 
 interface Review {
+  id: string;
   name: string;
   responsiveness: number;
   friendliness: number;
   delivery: number;
   reviewText: string;
-  avatarUrl: string;
+  dateSubmitted: string;
 }
 
-const reviews: Review[] = [
-  {
-    name: "World Vision",
-    responsiveness: 3,
-    friendliness: 3,
-    delivery: 4.5,
-    reviewText: "This is a fantastic product! Highly recommend it to everyone.",
-    avatarUrl: "",
-  },
-  {
-    name: "Partners in Health",
-    responsiveness: 3,
-    friendliness: 3,
-    delivery: 3,
-    reviewText: "It's good, but there are some areas for improvement.",
-    avatarUrl: "",
-  },
-  {
-    name: "Handicap Internationale",
-    responsiveness: 3,
-    friendliness: 3,
-    delivery: 5,
-    reviewText: "Absolutely loved it! Exceeded my expectations!",
-    avatarUrl: "",
-  },
-];
-
 const ReviewsList: React.FC = () => {
+  const { data, isLoading, isError } = useRatingsQuery();
+  const [mapped, setMapped] = useState<Review[]>([]);
+
+  useEffect(() => {
+    if (!isLoading && !isError && data) {
+      const mappedData: Review[] = data.map((review: any) => ({
+        id: review._id,
+        name: review.organizationId.name,
+        responsiveness: review.responsiveness,
+        friendliness: review.friendliness,
+        delivery: review.delivery,
+        reviewText: review.comments,
+        dateSubmitted: dayjs(review.dateSubmitted).format("MMM DD, YYYY"),
+      }));
+      setMapped(mappedData);
+    }
+  }, [data, isLoading, isError]);
+
+  if (isLoading) {
+    return <CircularProgress sx={{ display: "block", margin: "auto", mt: 2 }} />;
+  }
+
+  if (isError) {
+    return (
+      <Typography variant="h6" sx={{ color: "error.main", textAlign: "center", mt: 2 }}>
+        Something went wrong
+      </Typography>
+    );
+  }
+
   return (
-    <Paper sx={{ p: 2, width: '100%', maxWidth: 600, margin: 'auto', maxHeight: 400, overflow: "scroll", position: "relative", boxShadow: 3, borderRadius: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', position: "static", top: 0, height: 40, backgroundColor: "white", fontWeight: "bold", paddingLeft: 1 }}>
-        Reviews
+    <Paper
+      sx={{
+        p: 2,
+        width: "100%",
+        maxWidth: 600,
+        margin: "auto",
+        maxHeight: 400,
+        overflowY: "auto",
+        boxShadow: 3,
+        borderRadius: 2,
+        bgcolor: "background.paper",
+      }}
+    >
+      <Typography
+        variant="h6"
+        sx={{
+          mb: 2,
+          color: "primary.main",
+          fontWeight: "bold",
+          textAlign: "center",
+        }}
+      >
+        Reviews from Organizations
       </Typography>
       <List>
-        {reviews.map((review, index) => (
-          <Box key={index}>
-            <ListItem sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-              <ListItemAvatar>
-                <Avatar alt={review.name} src={review.avatarUrl} sx={{ width: 40, height: 40 }} />
-              </ListItemAvatar>
-              <Box sx={{ flexGrow: 1, paddingLeft: 2 }}>
+        {mapped.map((review, index) => (
+          <Box key={review.id} sx={{ mb: 2 }}>
+            <ListItem sx={{ alignItems: "flex-start" }}>
+              <Box sx={{ flexGrow: 1 }}>
                 <ListItemText
                   primary={
-                    <Typography variant="body1" fontWeight="bold" color="text.primary">
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">
                       {review.name}
                     </Typography>
                   }
                   secondary={
                     <Box>
-                      <Box sx={{ display: "flex", justifyContent: 'flex-start', alignItems: "center", gap: 2 }}>
-                        <Typography variant="body2" color="text.secondary">Delivery</Typography>
-                        <Rating
-                          value={review.delivery}
-                          readOnly
-                          precision={0.5}
-                          icon={<StarIcon sx={{ fontSize: 18 }} />}
-                        />
-                      </Box>
-                      <Box sx={{ display: "flex", justifyContent: 'flex-start', alignItems: "center", gap: 2 }}>
-                        <Typography variant="body2" color="text.secondary">Responsiveness</Typography>
-                        <Rating
-                          value={review.responsiveness}
-                          readOnly
-                          precision={0.5}
-                          icon={<StarIcon sx={{ fontSize: 18 }} />}
-                        />
-                      </Box>
-                      <Box sx={{ display: "flex", justifyContent: 'flex-start', alignItems: "center", gap: 2 }}>
-                        <Typography variant="body2" color="text.secondary">Friendliness</Typography>
-                        <Rating
-                          value={review.friendliness}
-                          readOnly
-                          precision={0.5}
-                          icon={<StarIcon sx={{ fontSize: 18 }} />}
-                        />
-                      </Box>
-                      <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-                        {review.reviewText}
+                      {["Delivery", "Responsiveness", "Friendliness"].map((label, i) => (
+                        <Box key={i} sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.5 }}>
+                          <Typography variant="body2" fontWeight={500} color="text.secondary">
+                            {label}:
+                          </Typography>
+                          <Rating
+                            value={
+                              label === "Delivery"
+                                ? review.delivery
+                                : label === "Responsiveness"
+                                ? review.responsiveness
+                                : review.friendliness
+                            }
+                            readOnly
+                            precision={0.5}
+                            icon={<StarIcon sx={{ fontSize: 18 }} />}
+                          />
+                        </Box>
+                      ))}
+                      <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic", color: "text.secondary" }}>
+                        "{review.reviewText}"
+                      </Typography>
+                      <Typography variant="caption" sx={{ display: "block", textAlign: "right", mt: 1, color: "text.disabled" }}>
+                        {review.dateSubmitted}
                       </Typography>
                     </Box>
                   }
                 />
               </Box>
             </ListItem>
-            {index < reviews.length - 1 && <Divider sx={{ marginBottom: 1 }} />}
+            {index < mapped.length - 1 && <Divider sx={{ my: 1 }} />}
           </Box>
         ))}
       </List>
